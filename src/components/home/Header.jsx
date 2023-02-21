@@ -14,8 +14,8 @@ const Header = () => {
           />
         </View>
         <View className="mt-3">
-          <Text className="text-5xl text-neutral-800">Hello,</Text>
-          <Text className="text-5xl text-neutral-800">Shakil Ahmed</Text>
+          <Text className="text-4xl text-neutral-800">Hello,</Text>
+          <Text className="text-3xl text-neutral-800">Shakil Ahmed</Text>
         </View>
         <View className="bg-[#1b0f28c8] px-5 rounded-2xl py-4">
           <Text className="text-white text-lg text-center">
