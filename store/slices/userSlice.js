@@ -34,11 +34,9 @@ export const verifyUser = createAsyncThunk(
   'user/verifyUser',
   async ({token, id}, thunkAPI) => {
     try {
-      console.log(token, id);
       const response = await axios.post(baseURL + `/auth/confirmCode/${id}`, {
         pin: token,
       });
-      console.log(response);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

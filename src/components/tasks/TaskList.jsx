@@ -2,13 +2,14 @@ import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import TaskCard from './TaskCard';
 import {useSelector} from 'react-redux';
+import TaskCategory from '../../utils/TaskCategory';
 
 const TaskList = () => {
   const [isActive, setActive] = useState('todo');
   const {allTasks} = useSelector(state => state.taskReducer);
-  const progressing = allTasks.filter(task => task.tag == 'Progressing');
-  const todos = allTasks.filter(task => task.tag == 'Todo');
-  const completed = allTasks.filter(task => task.tag == 'Completed');
+  const {todos, progressing, completed} = TaskCategory(
+    allTasks ? allTasks : [],
+  );
   return (
     <View className="mt-3 min-h-screen w-screen">
       <View className="flex-row fixed top-0 justify-between pb-2 pt-1 px-3">
@@ -47,10 +48,10 @@ const TaskList = () => {
       <View className="w-screen h-screen">
         <ScrollView className="w-full min-h-screen pb-2 px-3">
           {isActive == 'todo'
-            ? todos.map(task => <TaskCard task={task} key={task.id} />)
+            ? todos.map(task => <TaskCard task={task} key={task._id} />)
             : isActive == 'in-progress'
-            ? progressing.map(task => <TaskCard task={task} key={task.id} />)
-            : completed.map(task => <TaskCard task={task} key={task.id} />)}
+            ? progressing.map(task => <TaskCard task={task} key={task._id} />)
+            : completed.map(task => <TaskCard task={task} key={task._id} />)}
         </ScrollView>
       </View>
       {/* <View className="bg-[#3a0945c6]"></View> */}

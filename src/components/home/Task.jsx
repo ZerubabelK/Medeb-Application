@@ -8,14 +8,23 @@ const Task = ({task}) => {
       task.subtasks.length) *
       100,
   );
+  function dateDiffInDays(a, b) {
+    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    // Discard the time and time-zone information.
+    a = new Date(a);
+    b = new Date(b);
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
+    return Math.floor((utc1 - utc2) / _MS_PER_DAY);
+  }
   return (
     <View className="mx-3 justify-between shadow-xl bg-white h-[23vh] rounded-xl w-[60vw] py-2 px-2">
       <View className="flex-row items-center justify-between">
-        <Text>{task.task}</Text>
+        <Text>{task.name}</Text>
         <Text className="text-lg">...</Text>
       </View>
-      <Text>{task.desc}</Text>
+      <Text>{task.description}</Text>
       <View>
         <View className="flex-row justify-between">
           <Text>Progress</Text>
@@ -27,7 +36,9 @@ const Task = ({task}) => {
       </View>
       <View className="flex-row items-center">
         <FontAwesome5 name="clock" size={20} color={'gray'} />
-        <Text className="ml-2">2 days left</Text>
+        <Text className="ml-2">
+          {dateDiffInDays(task.endDate, task.startDate)} days left
+        </Text>
       </View>
     </View>
   );

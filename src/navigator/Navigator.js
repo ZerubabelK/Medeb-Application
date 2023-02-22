@@ -19,7 +19,7 @@ const Navigator = () => {
         ) : activeTab == 'Tasks' ? (
           <Tasks />
         ) : activeTab == 'AddTask' ? (
-          <AddTask />
+          <AddTask setActiveTap={setActiveTap} />
         ) : (
           <Personal />
         )}

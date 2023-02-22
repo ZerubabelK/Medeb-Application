@@ -7,7 +7,6 @@ import {fetchTasks} from '../store/slices/taskSlice';
 
 const Home = () => {
   const {user} = useSelector(state => state.userReducer);
-  console.log(user);
   const dispatch = useDispatch();
   dispatch(fetchTasks(user.token));
   return (

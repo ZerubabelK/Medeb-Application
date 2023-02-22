@@ -2,26 +2,12 @@ import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import Task from './Task';
 import {useSelector} from 'react-redux';
+import TaskCategory from '../../utils/TaskCategory';
 
 const TasksInProgress = () => {
   const [isActive, setActive] = useState('todo');
-  const state = useSelector(state => state.taskReducer);
-  console.log(state);
-  const progressing = useSelector(state => {
-    return [];
-    // console.log(state.taskReducer.allTasks);
-    // return state.taskReducer.allTasks.filter(
-    //   task => task.tag === 'Progressing',
-    // );
-  });
-  const todos = useSelector(state => {
-    return [];
-    // return state.taskReducer.allTasks.filter(task => task.tag === 'Todo');
-  });
-  const completed = useSelector(state => {
-    return [];
-    // return state.taskReducer.allTasks.filter(task => task.tag === 'Completed');
-  });
+  const {allTasks} = useSelector(state => state.taskReducer);
+  const {progressing, todos, completed} = TaskCategory(allTasks);
   return (
     <View className="mt-3">
       <View className="w-full flex-row justify-between px-6">
@@ -33,7 +19,6 @@ const TasksInProgress = () => {
       <View>
         <View className="flex-row justify-evenly pb-2 pt-1">
           <TouchableOpacity
-            delayPressIn={1}
             onPress={() => {
               setActive('todo');
             }}
@@ -44,7 +29,6 @@ const TasksInProgress = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            delayPressIn={1}
             onPress={() => {
               setActive('in-progress');
             }}
@@ -57,7 +41,6 @@ const TasksInProgress = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            delayPressIn={1}
             onPress={() => {
               setActive('completed');
             }}
@@ -74,10 +57,10 @@ const TasksInProgress = () => {
       <View>
         <ScrollView className="h-full pb-2" horizontal={true}>
           {isActive == 'todo'
-            ? todos.map(task => <Task task={task} key={task.id} />)
+            ? todos.map(task => <Task task={task} key={task._id} />)
             : isActive == 'in-progress'
-            ? progressing.map(task => <Task task={task} key={task.id} />)
-            : completed.map(task => <Task task={task} key={task.id} />)}
+            ? progressing.map(task => <Task task={task} key={task._id} />)
+            : completed.map(task => <Task task={task} key={task._id} />)}
         </ScrollView>
       </View>
       <View className="bg-[#3a0945c6]"></View>

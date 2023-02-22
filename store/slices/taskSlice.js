@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {act} from 'react-test-renderer';
 
 const initialState = {
   cachedTask: {subtasks: []},
@@ -10,6 +11,7 @@ const baseURL = 'http://192.168.43.70:8000/api';
 export const addTask = createAsyncThunk(
   'tasks/addTask',
   async ({task, token}, thunkAPI) => {
+    console.log(task, token);
     try {
       const response = await axios.post(`${baseURL}/tasks/add`, task, {
         headers: {Authorization: token},
@@ -35,21 +37,26 @@ export const addTask = createAsyncThunk(
 //     }
 //   },
 // );
-// export const changeStatusOfSubtask = createAsyncThunk(
-//   'user/verifyUser',
-//   async ({token, id}, thunkAPI) => {
-//     try {
-//       console.log(token, id);
-//       const response = await axios.post(baseURL + `/auth/confirmCode/${id}`, {
-//         pin: token,
-//       });
-//       console.log(response);
-//       return response.data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   },
-// );
+export const changeStatusOfSubtask = createAsyncThunk(
+  'user/changeStatusOfSubtask',
+  async ({taskId, subtaskId, value, token}, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        baseURL + `/tasks/subtask/${subtaskId}`,
+        {
+          value,
+          taskId,
+        },
+        {
+          headers: {Authorization: token},
+        },
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
   async (token, thunkAPI) => {
@@ -57,7 +64,7 @@ export const fetchTasks = createAsyncThunk(
       const response = await axios.get(baseURL + `/tasks`, {
         headers: {Authorization: token},
       });
-      console.log(response.data);
+      fetchTasks();
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -71,14 +78,6 @@ const taskSLice = createSlice({
     removeTask: (state, {payload}) => {
       state.allTasks = state.addTask.filter(task => task.id != payload.id);
     },
-    changeStatusOfSubtask: (state, {payload}) => {
-      const index = state.allTasks.findIndex(task => task.id == payload.taskId);
-      console.log(payload);
-      const subtaskIndex = state.allTasks[index].subtasks.findIndex(
-        subtask => subtask.id == payload.subtaskId,
-      );
-      state.allTasks[index].subtasks[subtaskIndex].done = payload.value;
-    },
     setCachedTask: (state, {payload}) => {
       state.cachedTask = payload;
     },
@@ -86,11 +85,12 @@ const taskSLice = createSlice({
   extraReducers: {
     [fetchTasks.fulfilled]: (state, action) => {
       state.allTasks = action.payload.tasks;
-      console.log(action.payload.tasks);
+      console.log(state.allTasks);
     },
     [addTask.fulfilled]: (state, action) => {
       return [...state.allTasks, action.payload.task];
     },
+    [changeStatusOfSubtask.fulfilled]: (state, action) => {},
   },
 });
 
