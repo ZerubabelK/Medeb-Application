@@ -59,7 +59,9 @@ const AddTask = ({setActiveTap}) => {
         task,
         token: user.token,
       }),
-    );
+    ).then(res => {
+      console.log(res);
+    });
     setActiveTap('Tasks');
   };
   const Subtasks = ({subtask, index}) => {

@@ -29,7 +29,7 @@ export const removeTask = createAsyncThunk(
         headers: {Authorization: token},
       });
       if (response) fetchTasks(token);
-      return response.data;
+      return {taskId};
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -62,8 +62,7 @@ export const changeStatusOfSubtask = createAsyncThunk(
           headers: {Authorization: token},
         },
       );
-      fetchTasks(token);
-      return response.data;
+      return {taskId, subtaskId, value};
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -73,23 +72,40 @@ const taskSLice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    removeTask: (state, {payload}) => {
-      state.allTasks = state.addTask.filter(task => task.id != payload.id);
-    },
     setCachedTask: (state, {payload}) => {
       state.cachedTask = payload;
     },
   },
   extraReducers: {
-    [fetchTasks.fulfilled]: (state, action) => {
-      state.allTasks = action.payload.tasks;
-      console.log(state.allTasks);
-    },
+    [fetchTasks.fulfilled]: (state, action) =>
+      void (state.allTasks = [...action.payload.tasks]),
     [addTask.fulfilled]: (state, action) => {
-      return [...state.allTasks, action.payload.task];
+      let newTasks = state.allTasks;
+      newTasks.push(action.payload.task);
+      state.allTasks = [...newTasks];
+      return undefined;
     },
-    [changeStatusOfSubtask.fulfilled]: (state, action) => {},
-    [removeTask.fulfilled]: (state, action) => {},
+    [changeStatusOfSubtask.fulfilled]: (state, action) => {
+      let index = state.allTasks.findIndex(
+        task => task._id == action.payload.taskId,
+      );
+      if (index >= 0) {
+        let i = state.allTasks[index].subtasks.findIndex(
+          subtask => subtask._id == action.payload.subtaskId,
+        );
+        if (i >= 0) {
+          state.allTasks[index].subtasks[i].done = action.payload.value;
+        }
+      }
+      return undefined;
+    },
+    [removeTask.fulfilled]: (state, action) => {
+      console.log(action);
+      state.allTasks = state.addTask.filter(
+        task => task._id != action.payload.taskId,
+      );
+      return undefined;
+    },
   },
 });
 

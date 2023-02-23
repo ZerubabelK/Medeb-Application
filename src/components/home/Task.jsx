@@ -21,22 +21,21 @@ const Task = ({task}) => {
   return (
     <View className="mx-3 justify-between shadow-xl bg-white h-[23vh] rounded-xl w-[60vw] py-2 px-2">
       <View className="flex-row items-center justify-between">
-        <Text>{task.name}</Text>
-        <Text className="text-lg">...</Text>
+        <Text className="text-black font-semibold text-lg">{task.name}</Text>
       </View>
-      <Text>{task.description}</Text>
+      <Text className="text-black">{task.description}</Text>
       <View>
         <View className="flex-row justify-between">
-          <Text>Progress</Text>
-          <Text>{Math.round(progress)}%</Text>
+          <Text className="text-black">Progress</Text>
+          <Text className="text-black">{Math.round(progress)}%</Text>
         </View>
         <View className="mt-1 bg-slate-100 rounded-md">
           <ProgressBar progress={progress} />
         </View>
       </View>
       <View className="flex-row items-center">
-        <FontAwesome5 name="clock" size={20} color={'gray'} />
-        <Text className="ml-2">
+        <FontAwesome5 name="clock" size={20} color={'black'} />
+        <Text className="ml-2 text-black">
           {dateDiffInDays(task.endDate, task.startDate)} days left
         </Text>
       </View>

@@ -7,7 +7,13 @@ import {fetchTasks} from '../store/slices/taskSlice';
 const Tasks = () => {
   const {user} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
-  dispatch(fetchTasks(user.token));
+  try {
+    dispatch(fetchTasks(user.token)).then(pay => {
+      console.log(pay.payload.tasks);
+    });
+  } catch (err) {
+    console.log(err);
+  }
   return (
     <View className="h-screen w-screen">
       <View className="border-b-[1px] py-3 flex-row justify-evenly">

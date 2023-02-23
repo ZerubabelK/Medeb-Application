@@ -18,6 +18,7 @@ const TaskCard = ({task}) => {
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
     return Math.floor((utc1 - utc2) / _MS_PER_DAY);
   }
+  let dayLeft = dateDiffInDays(task.endDate, task.startDate);
   return (
     <View className="flex-row w-full">
       <Pressable onPress={() => setSpread(!spread)}>
