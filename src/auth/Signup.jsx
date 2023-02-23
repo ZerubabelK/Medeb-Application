@@ -10,8 +10,19 @@ const Signup = ({setIsNew}) => {
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [processing, setProcessing] = useState(false);
   const handleSignup = async () => {
-    dispatch(signup({firstname, lastname, password, email}));
+    const response = await dispatch(
+      signup({firstname, lastname, password, email}),
+    );
+    if (response.error) {
+      setError(
+        response.payload == 'Network Error'
+          ? response.payload
+          : 'Email Registered',
+      );
+    }
   };
   return (
     <View className="relative h-screen justify-center">
@@ -28,7 +39,14 @@ const Signup = ({setIsNew}) => {
           </Text>
         </View>
       </View>
-      <View className="items-center justify-center mt-4">
+      {error ? (
+        <View className="bg-[#cb5c5cbf] w-2/3 self-center items-center rounded-lg py-3 mt-4">
+          <Text className="text-white">{error}</Text>
+        </View>
+      ) : (
+        <></>
+      )}
+      <View className="items-center justify-center">
         <TextInput
           placeholder="First name"
           className="w-3/4 rounded px-2 py-3 mt-3 shadow-sm z-20"
@@ -56,8 +74,10 @@ const Signup = ({setIsNew}) => {
         <View className="w-4/5 h-px bg-gray-300 mt-10"></View>
         <TouchableOpacity
           onPress={handleSignup}
-          className="bg-sky-500 px-3 py-3 mt-3 w-3/4 rounded-lg items-center">
-          <Text className="text-white text-xl">Sign up</Text>
+          className="bg-[#1b0f28c8] px-3 py-3 mt-3 w-3/4 rounded-lg items-center">
+          <Text className="text-white text-xl">
+            {processing ? 'Processing...' : 'Sign up'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View className="flex-row self-center mt-12">

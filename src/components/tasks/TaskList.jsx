@@ -54,7 +54,6 @@ const TaskList = () => {
             : completed.map(task => <TaskCard task={task} key={task._id} />)}
         </ScrollView>
       </View>
-      {/* <View className="bg-[#3a0945c6]"></View> */}
     </View>
   );
 };

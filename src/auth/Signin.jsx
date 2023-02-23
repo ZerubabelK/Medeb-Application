@@ -1,15 +1,25 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {login} from '../../store/slices/userSlice';
+import {login, resentOTP} from '../../store/slices/userSlice';
 const Signin = ({setIsNew}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleAuth = () => {
-    // console.log({username, password});
-    dispatch(login({username, password}));
+  const [error, setError] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const handleAuth = async () => {
+    setProcessing(true);
+    const response = await dispatch(login({email, password}));
+    if (response.error) {
+      setError(
+        response.payload == 'Network Error'
+          ? response.payload
+          : 'Invalid Credentials',
+      );
+    }
+    if (response) setProcessing(false);
   };
   return (
     <View className="relative h-screen mt-12 ">
@@ -26,11 +36,18 @@ const Signin = ({setIsNew}) => {
           </Text>
         </View>
       </View>
+      {error ? (
+        <View className="bg-[#cb5c5cbf] w-2/3 self-center items-center rounded-lg py-3 mt-4">
+          <Text className="text-white">{error}</Text>
+        </View>
+      ) : (
+        <></>
+      )}
       <View className="items-center justify-center mt-4">
         <TextInput
-          placeholder="Username"
+          placeholder="Email"
           className="w-3/4 rounded px-2 py-3 mt-3 shadow-sm z-20"
-          onChangeText={text => setUsername(text)}
+          onChangeText={text => setEmail(text)}
         />
         <TextInput
           placeholder="Password"
@@ -40,9 +57,12 @@ const Signin = ({setIsNew}) => {
         />
         <View className="w-4/5 h-px bg-gray-300 mt-10"></View>
         <TouchableOpacity
+          disabled={processing}
           onPress={handleAuth}
-          className="bg-sky-500 px-3 py-3 mt-3 w-3/4 rounded-lg items-center">
-          <Text className="text-white text-xl">Sign in</Text>
+          className="bg-[#1b0f28c8] px-3 py-3 mt-3 w-3/4 rounded-lg items-center">
+          <Text className={'text-white text-xl'}>
+            {processing ? 'Processing...' : 'Sign in'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View className="flex-row self-center mt-12">

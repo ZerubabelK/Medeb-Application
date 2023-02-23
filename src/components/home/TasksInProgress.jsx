@@ -4,15 +4,17 @@ import Task from './Task';
 import {useSelector} from 'react-redux';
 import TaskCategory from '../../utils/TaskCategory';
 
-const TasksInProgress = () => {
+const TasksInProgress = ({setActiveTap}) => {
   const [isActive, setActive] = useState('todo');
   const {allTasks} = useSelector(state => state.taskReducer);
-  const {progressing, todos, completed} = TaskCategory(allTasks);
+  const {progressing, todos, completed} = TaskCategory(
+    allTasks ? allTasks : [],
+  );
   return (
     <View className="mt-3">
       <View className="w-full flex-row justify-between px-6">
         <Text className="text-lg text-black font-bold">Tasks in progress</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={_ => setActiveTap('Tasks')}>
           <Text className="text-base text-blue-500">See all</Text>
         </TouchableOpacity>
       </View>

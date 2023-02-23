@@ -1,7 +1,7 @@
-import {View, Text, TextInput, Pressable} from 'react-native';
+import {View, Text, TextInput, Pressable, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {verifyUser} from '../../store/slices/userSlice';
+import {logout, resentOTP, verifyUser} from '../../store/slices/userSlice';
 
 const PinVerification = () => {
   const {user} = useSelector(state => state.userReducer);
@@ -22,13 +22,22 @@ const PinVerification = () => {
     }
   }, [otpInput]);
   return (
-    <View className="h-screen w-full py-20 px-3">
+    <View className="h-screen w-full px-3">
       <View className="container w-full mx-auto">
         <View className="mx-auto w-full">
           <View className="w-full">
-            <View className="rounded-xl px-3 h-64 py-3 text-center">
-              <Text className="text-3xl font-bold">OTP Verification</Text>
-              <View className="flex flex-col mt-4">
+            <View>
+              <TouchableOpacity
+                className="self-end px-5 py-2 bg-[#1b0f28c8] mt-5 rounded-md"
+                onPress={_ => dispatch(logout())}>
+                <Text className="text-white font-semibold text-lg">Cancel</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="rounded-xl py-20 px-3 h-64 text-center">
+              <Text className="text-3xl font-bold text-center">
+                OTP Verification
+              </Text>
+              <View className="flex flex-col mt-4 items-center">
                 <Text>Enter the OTP you received at</Text>
                 <Text className="font-bold">{user.email}</Text>
               </View>
@@ -75,14 +84,11 @@ const PinVerification = () => {
               </View>
 
               <View className="flex-row items-center space-x-3  justify-center text-center mt-8">
-                <Pressable className="flex items-center text-blue-700 hover:text-blue-900 cursor-pointer">
-                  <Text className="font-bold bg-sky-400 px-3 py-2 text-white rounded-md">
-                    Verify
-                  </Text>
-                </Pressable>
-                <Pressable className="flex items-center text-blue-700 hover:text-blue-900 cursor-pointer">
-                  <Text className="font-bold ">resend OTP</Text>
-                </Pressable>
+                <TouchableOpacity
+                  onPress={_ => dispatch(resentOTP(user._id))}
+                  className="flex items-center bg-[#1b0f28c8] rounded-md py-2 px-3 cursor-pointer">
+                  <Text className="font-bold text-white">resend OTP</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

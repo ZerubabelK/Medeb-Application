@@ -1,7 +1,10 @@
-import {View, Text, Pressable, Switch} from 'react-native';
+import {View, Text, Pressable, Switch, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {changeStatusOfSubtask} from '../../../store/slices/taskSlice';
+import {
+  changeStatusOfSubtask,
+  removeTask,
+} from '../../../store/slices/taskSlice';
 import {useDispatch, useSelector} from 'react-redux';
 const TaskCard = ({task}) => {
   const [spread, setSpread] = useState(false);
@@ -37,14 +40,19 @@ const TaskCard = ({task}) => {
         <View
           style={spread ? {display: 'flex'} : {display: 'none'}}
           className="bg-white py-3 my-3 px-2 rounded-lg">
-          <View>
+          <View className="flex-row justify-between items-center">
             <Text className="text-2xl text-black">{task.name}</Text>
+            <TouchableOpacity
+              onPress={_ => dispatch(removeTask({taskId: task._id, token}))}
+              className="px-3">
+              <FontAwesome5 name="trash" size={20} color={'red'} />
+            </TouchableOpacity>
           </View>
           <View className="w-[88vw] h-[1px] bg-slate-300 my-2 "></View>
           <Text className="text-black text-[14px]">{task.description}</Text>
           <View className="flex-row flex-wrap justify-between">
             {task.subtasks.map(subtask => (
-              <View key={subtask.title} className="flex-row py-2">
+              <View key={subtask._id} className="flex-row py-2">
                 <Text className="text-black">{subtask.name}</Text>
                 <Switch
                   trackColor={{false: '#767577', true: '#81b0ff'}}

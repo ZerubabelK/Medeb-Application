@@ -15,13 +15,13 @@ const Navigator = () => {
     <View className="w-screen h-full items-center bg-slate-100">
       <ScrollView className="w-full h-screen py-2">
         {activeTab == 'Home' ? (
-          <Home />
+          <Home setActiveTap={setActiveTap} />
         ) : activeTab == 'Tasks' ? (
           <Tasks />
         ) : activeTab == 'AddTask' ? (
           <AddTask setActiveTap={setActiveTap} />
         ) : (
-          <Personal />
+          <Personal setActiveTap={setActiveTap} />
         )}
       </ScrollView>
       <View className="fixed w-[95%] flex-row bottom-0 items-center justify-between py-2 bg-[#1b0f28c8] px-2 my-2 rounded-3xl">

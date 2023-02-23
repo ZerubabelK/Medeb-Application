@@ -11,8 +11,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {addTask, setCachedTask} from '../store/slices/taskSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import DatePicker from 'react-native-date-picker';
-const AddTask = ({setActiveTab}) => {
-  console.log(setActiveTab);
+const AddTask = ({setActiveTap}) => {
   const {cachedTask} = useSelector(state => state.taskReducer);
   const {user} = useSelector(state => state.userReducer);
   const [subtasks, setSubtasks] = useState(
@@ -47,13 +46,6 @@ const AddTask = ({setActiveTab}) => {
       Alert.alert('PLease fill out all the fields in Sub-task');
     }
   };
-  console.log({
-    name: taskTitle,
-    description: taskDescription,
-    subtasks,
-    startDate,
-    endDate,
-  });
   const handleTaskAdd = () => {
     const task = {
       name: taskTitle,
@@ -62,15 +54,13 @@ const AddTask = ({setActiveTab}) => {
       startDate: startDate.toDateString(),
       endDate: endDate.toDateString(),
     };
-    console.log(task);
     dispatch(
       addTask({
         task,
         token: user.token,
       }),
     );
-    // dispatch(setCachedTask(null));
-    // setActiveTab('Tasks');
+    setActiveTap('Tasks');
   };
   const Subtasks = ({subtask, index}) => {
     return (
@@ -109,7 +99,7 @@ const AddTask = ({setActiveTab}) => {
           <Text className="text-sm py-0">Name</Text>
           <TextInput
             placeholder="Task name"
-            className="border-[1px] rounded-lg px-1"
+            className="border-[1px] rounded-lg px-1 bg-sla"
             value={taskTitle}
             onChangeText={text => {
               setTaskTitle(text);
